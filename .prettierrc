@@ -1,0 +1,10 @@
+{
+  "printWidth": 120,
+  "trailingComma": "es5",
+  "eslintIntegration": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "editor.formatOnSave": true,
+  "semi": false,
+  "singleQuote": true
+}
