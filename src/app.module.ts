@@ -7,6 +7,7 @@ import { UserModule } from "./user/user.module";
 import { RolesModule } from './roles/roles.module';
 import { PermissionModule } from './permission/permission.module';
 import { CompanyModule } from './company/company.module';
+import { CaslModule } from './casl/casl.module';
 import ormConfigService from "./config/ormconfig"
 
 @Module({
@@ -18,6 +19,7 @@ import ormConfigService from "./config/ormconfig"
     RolesModule,
     PermissionModule,
     CompanyModule,
+    CaslModule,
   ],
   controllers: [],
   providers: [],
