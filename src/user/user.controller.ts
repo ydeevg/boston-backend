@@ -2,6 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CheckPolicies } from 'src/casl/decorators/check-policies.decorator';
+import { AppAbility } from 'src/casl/casl.types';
+import { Action } from 'src/casl/casl-actions.enum';
+import { ESubjects } from 'src/casl/e-subjects.enum';
 
 @Controller('user')
 export class UserController {
