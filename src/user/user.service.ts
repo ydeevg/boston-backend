@@ -28,9 +28,6 @@ export class UserService {
     return users;
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
@@ -38,5 +35,11 @@ export class UserService {
 
   async remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async findById(id: typeof UserEntity.prototype.id) {
+    const user = this.userRepository.findOneBy({ id })
+
+    return user
   }
 }

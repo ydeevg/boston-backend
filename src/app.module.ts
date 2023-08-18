@@ -8,6 +8,8 @@ import { RolesModule } from './roles/roles.module';
 import { PermissionModule } from './permission/permission.module';
 import { CompanyModule } from './company/company.module';
 import { CaslModule } from './casl/casl.module';
+import { PolicyPermissionModule } from './policy-permission/policy-permission.module';
+import { SessionModule } from './session/session.module';
 import ormConfigService from "./config/ormconfig"
 
 @Module({
@@ -20,6 +22,8 @@ import ormConfigService from "./config/ormconfig"
     PermissionModule,
     CompanyModule,
     CaslModule,
+    PolicyPermissionModule,
+    SessionModule,
   ],
   controllers: [],
   providers: [],

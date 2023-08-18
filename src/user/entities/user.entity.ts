@@ -31,8 +31,8 @@ export class UserEntity extends Base {
   roles: RoleEntity[];
 
   toResponse() {
-    const { id, email, name, cashiersName, createdAt, updatedAt } = this;
-    return { id, email, name, cashiersName, createdAt, updatedAt };
+    const { id, email, name, cashiersName, createdAt, roles, updatedAt } = this;
+    return { id, email, name, cashiersName, createdAt, roles, updatedAt };
   }
 
 }
