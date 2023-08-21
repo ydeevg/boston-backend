@@ -4,5 +4,8 @@
   "printWidth": 120,
   "tabWidth": 2,
   "semi": false,
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  }
 }
