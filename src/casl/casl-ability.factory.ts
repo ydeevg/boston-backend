@@ -1,17 +1,15 @@
-import { AbilityBuilder, AbilityClass, createMongoAbility, ExtractSubjectType, MongoAbility } from "@casl/ability"
-import { Injectable } from "@nestjs/common"
+import { AbilityBuilder, createMongoAbility, ExtractSubjectType, MongoAbility } from '@casl/ability'
+import { Injectable } from '@nestjs/common'
 import { forEach } from 'lodash'
-import { UserEntity } from "src/user/entities/user.entity"
-import { Action } from "./casl-actions.enum"
-import { Subjects, TPolicyPermissions } from "./casl.types"
-import { ESubjects } from "./e-subjects.enum"
+import { UserEntity } from 'src/user/entities/user.entity'
+import { Action } from './casl-actions.enum'
+import { Subjects, TPolicyPermissions } from './casl.types'
+import { ESubjects } from './e-subjects.enum'
 
 @Injectable()
 export class CaslAbilityFactory {
   createForUser(user: UserEntity, policyPermissions: TPolicyPermissions[]) {
-    const { can, build } = new AbilityBuilder<MongoAbility<[Action, Subjects]>>(
-      createMongoAbility
-    )
+    const { can, build } = new AbilityBuilder<MongoAbility<[Action, Subjects]>>(createMongoAbility)
 
     if (user) {
       forEach(policyPermissions, (policyPermission) => {
@@ -47,5 +45,3 @@ export class CaslAbilityFactory {
     })
   }
 }
-
-

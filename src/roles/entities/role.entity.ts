@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { CompanyEntity } from 'src/company/entities/company.entity'
+import { PolicyPermissionEntity } from 'src/policy-permission/entities/policy-permission.entity'
+import { UserEntity } from 'src/user/entities/user.entity'
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { Base } from '../../utils/base'
-import { CompanyEntity } from 'src/company/entities/company.entity'
-import { UserEntity } from 'src/user/entities/user.entity'
-import { PolicyPermissionEntity } from 'src/policy-permission/entities/policy-permission.entity'
 
 @Entity('role')
 export class RoleEntity extends Base {

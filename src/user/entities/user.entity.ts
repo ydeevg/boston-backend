@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm'
 import { RoleEntity } from 'src/roles/entities/role.entity'
+import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 import { Base } from '../../utils/base'
 
 @Entity('user')

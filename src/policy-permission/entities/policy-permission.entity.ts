@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
-import { Base } from 'src/utils/base'
-import { SPolicyEntity } from './sPolicy.entity'
 import { RoleEntity } from 'src/roles/entities/role.entity'
+import { Base } from 'src/utils/base'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { SPolicyEntity } from './sPolicy.entity'
 
 @Entity('policy_permission')
 export class PolicyPermissionEntity extends Base {

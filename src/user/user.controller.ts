@@ -1,11 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
-import { UserService } from './user.service'
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { CheckPolicies } from 'src/casl/decorators/check-policies.decorator'
-import { AppAbility } from 'src/casl/casl.types'
-import { Action } from 'src/casl/casl-actions.enum'
-import { ESubjects } from 'src/casl/e-subjects.enum'
+import { UserService } from './user.service'
 
 @Controller('user')
 export class UserController {

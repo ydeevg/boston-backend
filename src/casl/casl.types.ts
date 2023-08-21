@@ -1,6 +1,6 @@
-import { InferSubjects, MongoAbility } from "@casl/ability"
-import { Action } from "./casl-actions.enum"
-import { ESubjects } from "./e-subjects.enum"
+import { InferSubjects, MongoAbility } from '@casl/ability'
+import { Action } from './casl-actions.enum'
+import { ESubjects } from './e-subjects.enum'
 
 export type Subjects = InferSubjects<ESubjects | 'all'>
 

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity } from 'typeorm'
 import { Base } from 'src/utils/base'
+import { Column, Entity } from 'typeorm'
 
 @Entity('s_police')
 export class SPolicyEntity extends Base {
