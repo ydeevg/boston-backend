@@ -37,13 +37,13 @@ export class UserService {
   }
 
   async findById(id: typeof UserEntity.prototype.id) {
-    const user = this.userRepository.findOneBy({ id })
+    const user = this.userRepository.findOne({ where: { id }, relations: ['roles'] })
 
     return user
   }
 
   async findByPhone(phone: typeof UserEntity.prototype.phone) {
-    const user = this.userRepository.findOneBy({ phone })
+    const user = await this.userRepository.findOne({ where: { phone }, relations: ['roles'] })
 
     return user
   }

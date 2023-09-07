@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Res } from '@nestjs/common'
+import { Body, Controller, Post, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
 import { AuthUserDto } from './dto/auth-user.dto'
+import { Response } from 'express'
 
 @Controller('auth')
 export class AuthController {
@@ -11,27 +12,12 @@ export class AuthController {
   @ApiResponse({ status: 200 })
   @Post()
   async login(@Body() authUserDto: AuthUserDto, @Res({ passthrough: true }) res: Response) {
-    // const userData = await this.authService.
-    // return this.authService.create(createAuthDto);
-  }
+    const { user, accessToken, refreshToken } = await this.authService.login(authUserDto)
 
-  @Get()
-  findAll() {
-    return this.authService.findAll()
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id)
-  }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-  //   return this.authService.update(+id, updateAuthDto);
-  // }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id)
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 })
+    return {
+      accessToken,
+      user,
+    }
   }
 }

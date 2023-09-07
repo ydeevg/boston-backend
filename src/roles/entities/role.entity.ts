@@ -9,7 +9,7 @@ import { Base } from '../../utils/base'
 export class RoleEntity extends Base {
   @ApiProperty({ example: 'ADMIN', description: 'Название роли' })
   @Column({ unique: true })
-  value: string
+  name: string
 
   @ApiProperty({ example: 'Администратор', description: 'Описание роли' })
   @Column()

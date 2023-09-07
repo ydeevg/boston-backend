@@ -3,7 +3,7 @@ import { RoleEntity } from 'src/roles/entities/role.entity'
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 import { Base } from '../../utils/base'
 
-@Entity('user')
+@Entity('user', { schema: 'public' })
 export class UserEntity extends Base {
   @ApiProperty({ description: 'Phone number' })
   @Column({ unique: true })

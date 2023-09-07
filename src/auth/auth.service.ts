@@ -18,22 +18,6 @@ export class AuthService {
     private readonly jwtService: JwtService
   ) {}
 
-  findAll() {
-    return `This action returns all auth`
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`
-  }
-
-  update(id: number, updateAuthDto) {
-    return `This action updates a #${id} auth`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`
-  }
-
   async login(authUserDto: AuthUserDto) {
     const user = await this.userService.findByPhone(authUserDto.phone)
 
@@ -47,6 +31,13 @@ export class AuthService {
     }
 
     const tokens = await this.generateTokens(user)
+
+    await this.saveRefreshToken(user, tokens.refreshToken)
+
+    return {
+      ...tokens,
+      user: user.toResponse(),
+    }
   }
 
   private async generateTokens(user: UserEntity): Promise<{ accessToken: string; refreshToken: string }> {
@@ -68,17 +59,17 @@ export class AuthService {
     }
   }
 
-  //   private async saveRefreshToken(
-  //     user: UserEntity,
-  //     refreshToken: typeof TokenEntity.prototype.refreshToken
-  //   ): Promise<TokenEntity> {
-  //     // const tokenData = await this.tokenRepository.findOneBy({ user })
+  private async saveRefreshToken(
+    user: UserEntity,
+    refreshToken: typeof TokenEntity.prototype.refreshToken
+  ): Promise<TokenEntity> {
+    const tokenData = await this.tokenRepository.findOneBy({ user: { id: user.id } })
 
-  //     // if (tokenData) {
-  //     //   tokenData.refreshToken = refreshToken
-  //     //   return await this.tokenRepository.save(tokenData)
-  //     // }
+    if (tokenData) {
+      tokenData.refreshToken = refreshToken
+      return await this.tokenRepository.save(tokenData)
+    }
 
-  //     // const newToken = await this.tokenRepository.insert({ refreshToken, user })
-  //   }
+    const newToken = await this.tokenRepository.insert({ refreshToken, user })
+  }
 }
