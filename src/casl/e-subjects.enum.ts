@@ -1,4 +1,4 @@
 export enum ESubjects {
-  Agreement = 'Agreement',
+  Users = 'Users',
   PoliciesPermissionsForUser = 'PoliciesPermissionsForUser',
 }

@@ -13,7 +13,9 @@ const AppDataSource = {
   database: process.env.TYPEORM_DATABASE as string,
   synchronize: false,
   migrationsRun: false,
+  autoLoadEntities: false,
   entities: [join(__dirname, '..', '..', 'dist', '**', 'entities', '*.entity.js')],
+  migrations: [join(__dirname, '..', '..', 'dist', 'migrations', '**', '*.js')],
   logging: true,
 } as DataSourceOptions
 

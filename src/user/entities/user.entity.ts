@@ -10,7 +10,7 @@ export class UserEntity extends Base {
   phone: string
 
   @ApiProperty({ description: 'User password' })
-  @Column({ select: false })
+  @Column({})
   password: string
 
   @ApiProperty({ description: 'E-mail' })
@@ -22,7 +22,7 @@ export class UserEntity extends Base {
   name: string
 
   @ApiProperty({ description: 'Name surname patronymic' })
-  @Column({ default: '', name: 'cashiers_name', select: false })
+  @Column({ default: '', name: 'cashiers_name' })
   cashiersName: string
 
   @ApiProperty({ description: 'Роли пользователя' })

@@ -5,12 +5,11 @@ import { map } from 'lodash'
 import { TDecodedToken } from 'src/auth/auth.types'
 import { PolicyPermissionEntity } from 'src/policy-permission/entities/policy-permission.entity'
 import { PolicyPermissionService } from 'src/policy-permission/policy-permission.service'
-import { RolesService } from 'src/roles/roles.service'
 import { UserService } from 'src/user/user.service'
-import { CaslAbilityFactory } from '../casl-ability.factory'
-import { AppAbility, PolicyHandler } from '../casl.types'
+import { CaslAbilityFactory } from '../casl/casl-ability.factory'
+import { AppAbility, PolicyHandler } from '../casl/casl.types'
 import { CHECK_POLICIES_KEY } from '../decorators/check-policies.decorator'
-import { ESubjects } from '../e-subjects.enum'
+import { ESubjects } from '../casl/e-subjects.enum'
 
 @Injectable()
 export class PoliciesGuard implements CanActivate {
@@ -30,7 +29,6 @@ export class PoliciesGuard implements CanActivate {
 
   constructor(
     private readonly userService: UserService,
-    private readonly rolesService: RolesService,
     private readonly policyPermissionService: PolicyPermissionService,
     private reflector: Reflector,
     private caslAbilityFactory: CaslAbilityFactory,
@@ -47,7 +45,7 @@ export class PoliciesGuard implements CanActivate {
     const req = context.switchToHttp().getRequest()
 
     if (req?.headers?.authorization || req?.query?.accessToken) {
-      const accessToken: string = req.query.accessToken || req.headers.split(' ')[1]
+      const accessToken: string = req.query.accessToken || req.headers.authorization.split(' ')[1]
 
       let payload: TDecodedToken | undefined
       try {
@@ -56,6 +54,7 @@ export class PoliciesGuard implements CanActivate {
         throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
       }
 
+      console.log(payload)
       const { id: userId, rolesIds: userRolesIds } = payload
 
       const user = await this.userService.findById(userId)
@@ -71,7 +70,7 @@ export class PoliciesGuard implements CanActivate {
       return userId && hasPolicies()
     }
 
-    return false
+    throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
   }
 
   private execPolicyHandler(handler: PolicyHandler, ability: AppAbility) {

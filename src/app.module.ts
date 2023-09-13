@@ -10,6 +10,7 @@ import ormConfigService from './config/orm.config'
 import { PolicyPermissionModule } from './policy-permission/policy-permission.module'
 import { RolesModule } from './roles/roles.module'
 import { UserModule } from './user/user.module'
+import { PoliciesGuard } from './guards/policies.guard'
 
 @Module({
   imports: [

@@ -2,12 +2,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as bcrypt from 'bcrypt'
+import * as dotenv from 'dotenv'
 import { UserEntity } from 'src/user/entities/user.entity'
 import { UserService } from 'src/user/user.service'
 import { Repository } from 'typeorm'
 import { TDecodedToken } from './auth.types'
 import { AuthUserDto } from './dto/auth-user.dto'
 import { TokenEntity } from './entities/token.entity'
+
+dotenv.config()
 
 @Injectable()
 export class AuthService {
@@ -25,8 +28,13 @@ export class AuthService {
       throw new UnauthorizedException({ message: 'Неверный логин или пароль' })
     }
 
-    const isPassEquals = await bcrypt.compare(authUserDto.password, user.password)
-    if (!isPassEquals) {
+    try {
+      const isPassEquals = await bcrypt.compare(authUserDto.password, user.password)
+
+      if (!isPassEquals) {
+        throw new UnauthorizedException({ message: 'Неверный логин или пароль' })
+      }
+    } catch (error) {
       throw new UnauthorizedException({ message: 'Неверный логин или пароль' })
     }
 
@@ -38,6 +46,43 @@ export class AuthService {
       ...tokens,
       user: user.toResponse(),
     }
+  }
+
+  async logout(refreshToken) {
+    const token = await this.removeRefreshToken(refreshToken)
+    return token
+  }
+
+  async refresh(refreshToken: string) {
+    if (!refreshToken) {
+      throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
+    }
+
+    const userData = await this.validateRefreshToken(refreshToken)
+    const tokenInDatabase = await this.findToken(refreshToken)
+
+    if (!userData || !tokenInDatabase) {
+      throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
+    }
+
+    const tokens = await this.generateTokens(tokenInDatabase.user)
+
+    await this.saveRefreshToken(tokenInDatabase.user, tokens.refreshToken)
+
+    return {
+      ...tokens,
+      user: tokenInDatabase.user.toResponse(),
+    }
+  }
+
+  private async findToken(refreshToken: string) {
+    const tokenData = await this.tokenRepository.findOne({ where: { refreshToken }, relations: ['user', 'user.roles'] })
+    return tokenData
+  }
+
+  private async removeRefreshToken(refreshToken: string) {
+    const tokenData = await this.tokenRepository.delete({ refreshToken })
+    return tokenData
   }
 
   private async generateTokens(user: UserEntity): Promise<{ accessToken: string; refreshToken: string }> {
@@ -70,6 +115,20 @@ export class AuthService {
       return await this.tokenRepository.save(tokenData)
     }
 
-    const newToken = await this.tokenRepository.insert({ refreshToken, user })
+    await this.tokenRepository.insert({ refreshToken, user })
+  }
+
+  async getHash(password: string): Promise<string> {
+    return await bcrypt.hash(password, 3)
+  }
+
+  private validateRefreshToken(token: string) {
+    const userData = this.jwtService.verify(token, { secret: process.env.PRIVATE_KEY_REFRESH_TOKEN })
+
+    if (!userData) {
+      throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
+    }
+
+    return userData
   }
 }

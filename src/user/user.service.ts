@@ -23,9 +23,9 @@ export class UserService {
   }
 
   async findAll() {
-    const users = await this.userRepository.find()
+    const users = await this.userRepository.find({ relations: ['roles'] })
 
-    return users
+    return users.map((user) => user.toResponse())
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

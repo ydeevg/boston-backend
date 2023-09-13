@@ -1,18 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
-import { CreateUserDto } from './dto/create-user.dto'
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserService } from './user.service'
+import { CheckPolicies } from 'src/decorators/check-policies.decorator'
+import { AppAbility } from 'src/casl/casl.types'
+import { Action } from 'src/casl/casl-actions.enum'
+import { ESubjects } from 'src/casl/e-subjects.enum'
+import { PoliciesGuard } from 'src/guards/policies.guard'
 
+@UseGuards(PoliciesGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto)
-  }
-
   @Get()
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, ESubjects.Users))
   findAll() {
     return this.userService.findAll()
   }

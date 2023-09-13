@@ -36,8 +36,11 @@ export class PolicyPermissionService {
   async policyPermissionPartialListForUserRoles(
     userRolesIds: (typeof RoleEntity.prototype.id)[]
   ): Promise<PolicyPermissionEntity[]> {
-    const policyPermissions = await this.policyPermissionRepository.findBy({
-      userRole: In(userRolesIds),
+    const policyPermissions = await this.policyPermissionRepository.find({
+      where: {
+        userRole: In(userRolesIds),
+      },
+      relations: ['policy', 'userRole'],
     })
 
     return policyPermissions
