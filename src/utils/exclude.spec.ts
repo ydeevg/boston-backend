@@ -1,10 +1,9 @@
-import { exclude } from "./exclude"
+import { exclude } from './exclude'
 
 describe('exclude', () => {
-
   const Roles = {
     Admin: 'admin',
-    Manager: 'manager'
+    Manager: 'manager',
   }
 
   describe('from', () => {
