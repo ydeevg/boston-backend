@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { CompanyEntity } from 'src/company/entities/company.entity'
+import { TenantEntity } from 'src/tenant/entities/tenant.entity'
 import { PolicyPermissionEntity } from 'src/policy-permission/entities/policy-permission.entity'
 import { UserEntity } from 'src/user/entities/user.entity'
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
@@ -20,8 +20,8 @@ export class RoleEntity extends Base {
   policyPermissions: PolicyPermissionEntity[]
 
   @ApiProperty({ description: 'Компания-создатель роли' })
-  @ManyToOne(() => CompanyEntity, (company) => company.id, { cascade: true })
-  company: CompanyEntity
+  @ManyToOne(() => TenantEntity)
+  tenant: TenantEntity
 
   @ApiProperty({ description: 'Пользователи' })
   @ManyToMany(() => UserEntity, (user) => user.roles)

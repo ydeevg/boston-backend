@@ -23,27 +23,27 @@ export class UserService {
   }
 
   async findAll() {
-    const users = await this.userRepository.find({ relations: ['roles'] })
+    const users = await this.userRepository.find({ relations: ['roles', 'tenant'] })
 
     return users.map((user) => user.toResponse())
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: typeof UserEntity.prototype.id, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`
   }
 
-  async remove(id: number) {
+  async remove(id: typeof UserEntity.prototype.id) {
     return `This action removes a #${id} user`
   }
 
   async findById(id: typeof UserEntity.prototype.id) {
-    const user = this.userRepository.findOne({ where: { id }, relations: ['roles'] })
+    const user = this.userRepository.findOne({ where: { id }, relations: ['roles', 'tenant'] })
 
     return user
   }
 
   async findByPhone(phone: typeof UserEntity.prototype.phone) {
-    const user = await this.userRepository.findOne({ where: { phone }, relations: ['roles'] })
+    const user = await this.userRepository.findOne({ where: { phone }, relations: ['roles', 'tenant'] })
 
     return user
   }

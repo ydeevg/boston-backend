@@ -2,9 +2,10 @@ import { ApiProperty } from '@nestjs/swagger'
 import { RoleEntity } from 'src/roles/entities/role.entity'
 import { Column, Entity, OneToMany } from 'typeorm'
 import { Base } from '../../utils/base'
+import { UserEntity } from 'src/user/entities/user.entity'
 
-@Entity('company')
-export class CompanyEntity extends Base {
+@Entity('tenant')
+export class TenantEntity extends Base {
   @ApiProperty({ example: 'Бостон' })
   @Column({ name: 'brand_name' })
   brandName: string
@@ -13,7 +14,11 @@ export class CompanyEntity extends Base {
   @Column({ name: 'legal_name' })
   legalName: string
 
-  @ApiProperty({ description: 'Roles created by the company' })
-  @OneToMany(() => RoleEntity, (role) => role.company)
+  @ApiProperty({ description: 'Roles created by the tenant' })
+  @OneToMany(() => RoleEntity, (role) => role.tenant)
   roles: RoleEntity[]
+
+  @ApiProperty({ description: 'Users created by the tenant' })
+  @OneToMany(() => UserEntity, (user) => user.tenant)
+  users: UserEntity[]
 }

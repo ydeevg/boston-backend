@@ -5,12 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import * as path from 'path'
 import { AuthModule } from './auth/auth.module'
 import { CaslModule } from './casl/casl.module'
-import { CompanyModule } from './company/company.module'
+import { TenantModule } from './tenant/tenant.module'
 import ormConfigService from './config/orm.config'
 import { PolicyPermissionModule } from './policy-permission/policy-permission.module'
 import { RolesModule } from './roles/roles.module'
 import { UserModule } from './user/user.module'
-import { PoliciesGuard } from './guards/policies.guard'
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import { PoliciesGuard } from './guards/policies.guard'
     TypeOrmModule.forRoot(ormConfigService),
     UserModule,
     RolesModule,
-    CompanyModule,
+    TenantModule,
     CaslModule,
     PolicyPermissionModule,
     AuthModule,

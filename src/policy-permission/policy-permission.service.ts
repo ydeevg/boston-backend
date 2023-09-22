@@ -40,7 +40,7 @@ export class PolicyPermissionService {
       where: {
         userRole: In(userRolesIds),
       },
-      relations: ['policy', 'userRole'],
+      relations: ['policy', 'userRole', 'userRole.tenant'],
     })
 
     return policyPermissions

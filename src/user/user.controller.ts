@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Req, UnauthorizedException, UseGuards } from '@nestjs/common'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserService } from './user.service'
 import { CheckPolicies } from 'src/decorators/check-policies.decorator'
@@ -6,30 +6,36 @@ import { AppAbility } from 'src/casl/casl.types'
 import { Action } from 'src/casl/casl-actions.enum'
 import { ESubjects } from 'src/casl/e-subjects.enum'
 import { PoliciesGuard } from 'src/guards/policies.guard'
+import { CaslService } from 'src/casl/casl.service'
 
-@UseGuards(PoliciesGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService, private readonly caslService: CaslService) {}
 
   @Get()
-  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, ESubjects.Users))
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, ESubjects.User))
   findAll() {
     return this.userService.findAll()
   }
 
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.userService.findById(+id)
+  async findById(@Param('id') id: string, @Req() req) {
+    const user = await this.userService.findById(id)
+    const { ability } = await this.caslService.getAbility(req)
+    const isAccess = ability.can(Action.Update, user.toCaslConditionsFields())
+    if (!isAccess) throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
+
+    return (await this.userService.findById(id)).toResponse()
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto)
+    return this.userService.update(id, updateUserDto)
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id)
+    return this.userService.remove(id)
   }
 }

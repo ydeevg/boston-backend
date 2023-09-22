@@ -3,6 +3,7 @@ import { RoleEntity } from 'src/roles/entities/role.entity'
 import { Base } from 'src/utils/base'
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { SPolicyEntity } from './sPolicy.entity'
+import { PolicyConditions } from '../policy-conditions.types'
 
 @Entity('policy_permission')
 export class PolicyPermissionEntity extends Base {
@@ -34,4 +35,12 @@ export class PolicyPermissionEntity extends Base {
   @ApiProperty({ description: '' })
   @Column({ default: false })
   execute: boolean
+
+  @ApiProperty({ description: '' })
+  @Column({ type: 'jsonb', array: true, default: () => "'[{}]'", nullable: false })
+  conditions: PolicyConditions[]
+
+  @ApiProperty({ description: '' })
+  @Column({ default: false })
+  system: boolean
 }

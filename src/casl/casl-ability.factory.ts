@@ -1,4 +1,4 @@
-import { AbilityBuilder, createMongoAbility, ExtractSubjectType, MongoAbility } from '@casl/ability'
+import { defineAbility, MongoAbility, MongoQuery, Subject } from '@casl/ability'
 import { Injectable } from '@nestjs/common'
 import { forEach } from 'lodash'
 import { UserEntity } from 'src/user/entities/user.entity'
@@ -9,39 +9,39 @@ import { ESubjects } from './e-subjects.enum'
 @Injectable()
 export class CaslAbilityFactory {
   createForUser(user: UserEntity, policyPermissions: TPolicyPermissions[]) {
-    const { can, build } = new AbilityBuilder<MongoAbility<[Action, Subjects]>>(createMongoAbility)
+    return defineAbility<MongoAbility<[Action, Subjects | Subject], MongoQuery>>((can) => {
+      if (user) {
+        forEach(policyPermissions, (policyPermission) => {
+          const subject = policyPermission.subject
+          const conditionsList = policyPermission.conditions
 
-    if (user) {
-      forEach(policyPermissions, (policyPermission) => {
-        const subject = policyPermission.subject
+          // conditionsList.push({ userId: { $in: [user.id] } })
 
-        if (policyPermission.create) {
-          can(Action.Create, subject)
-        }
+          for (const conditions of conditionsList) {
+            if (policyPermission.create) {
+              can(Action.Create, subject, conditions)
+            }
 
-        if (policyPermission.read) {
-          can(Action.Read, subject)
-        }
+            if (policyPermission.read) {
+              can(Action.Read, subject, conditions)
+            }
 
-        if (policyPermission.update_) {
-          can(Action.Update, subject)
-        }
+            if (policyPermission.update_) {
+              can(Action.Update, subject, conditions)
+            }
 
-        if (policyPermission.delete) {
-          can(Action.Delete, subject)
-        }
+            if (policyPermission.delete) {
+              can(Action.Delete, subject, conditions)
+            }
 
-        if (policyPermission.execute) {
-          can(Action.Execute, subject)
-        }
+            if (policyPermission.execute) {
+              can(Action.Execute, subject, conditions)
+            }
+          }
 
-        can(Action.Read, ESubjects.PoliciesPermissionsForUser)
-      })
-    }
-
-    return build({
-      // Read https://casl.js.org/v5/en/guide/subject-type-detection for details
-      detectSubjectType: (item: any) => item.constructor as ExtractSubjectType<Subjects>,
+          can(Action.Read, ESubjects.PoliciesPermissionsForUser)
+        })
+      }
     })
   }
 }
