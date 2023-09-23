@@ -37,7 +37,7 @@ export class PolicyPermissionEntity extends Base {
   execute: boolean
 
   @ApiProperty({ description: '' })
-  @Column({ type: 'jsonb', array: true, default: () => "'[{}]'", nullable: false })
+  @Column({ type: 'jsonb', array: true, default: '{}', nullable: false })
   conditions: PolicyConditions[]
 
   @ApiProperty({ description: '' })

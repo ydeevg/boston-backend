@@ -3,6 +3,7 @@ import { RoleEntity } from 'src/roles/entities/role.entity'
 import { Column, Entity, OneToMany } from 'typeorm'
 import { Base } from '../../utils/base'
 import { UserEntity } from 'src/user/entities/user.entity'
+import { PointEntity } from 'src/point/entities/point.entity'
 
 @Entity('tenant')
 export class TenantEntity extends Base {
@@ -21,4 +22,8 @@ export class TenantEntity extends Base {
   @ApiProperty({ description: 'Users created by the tenant' })
   @OneToMany(() => UserEntity, (user) => user.tenant)
   users: UserEntity[]
+
+  @ApiProperty({ description: 'Points created by the tenant' })
+  @OneToMany(() => PointEntity, (point) => point.tenant)
+  points: PointEntity[]
 }

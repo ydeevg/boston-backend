@@ -10,6 +10,9 @@ import ormConfigService from './config/orm.config'
 import { PolicyPermissionModule } from './policy-permission/policy-permission.module'
 import { RolesModule } from './roles/roles.module'
 import { UserModule } from './user/user.module'
+import { PointModule } from './point/point.module'
+import { ProductModule } from './product/product.module'
+import { ComponentModule } from './component/component.module'
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { UserModule } from './user/user.module'
     CaslModule,
     PolicyPermissionModule,
     AuthModule,
+    PointModule,
+    ProductModule,
+    ComponentModule,
   ],
   controllers: [],
   providers: [],
