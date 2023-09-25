@@ -4,6 +4,7 @@ import { ProductUnits } from 'src/product/product-unit.enum'
 import { Base } from 'src/utils/base'
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
 import { ComponentCategoryEntity } from '../category/entities/component-category.entity'
+import { ConsumptionComponentEntity } from './consumption-component.entity'
 
 @Entity('component', { schema: 'public' })
 export class ComponentEntity extends Base {
@@ -40,4 +41,9 @@ export class ComponentEntity extends Base {
   @ManyToMany(() => ComponentCategoryEntity)
   @JoinTable()
   categories: ComponentCategoryEntity[]
+
+  @ApiProperty()
+  @ManyToMany(() => ConsumptionComponentEntity)
+  @JoinTable()
+  consumptionComponents: ConsumptionComponentEntity[]
 }

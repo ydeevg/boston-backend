@@ -23,6 +23,10 @@ export class OrderEntity extends Base {
   @JoinColumn()
   client: ClientEntity
 
+  @ApiProperty({ description: 'Client first name' })
+  @Column({ name: 'client_name', default: 'Гость' })
+  clientName: string
+
   @ApiProperty({ description: 'Order status' })
   @ManyToOne(() => OrderStatusEntity)
   @JoinColumn()
@@ -37,4 +41,8 @@ export class OrderEntity extends Base {
   @OneToOne(() => BillEntity)
   @JoinColumn()
   bill: BillEntity
+
+  @ApiProperty()
+  @Column({ default: null })
+  selectedReadyDate: Date
 }

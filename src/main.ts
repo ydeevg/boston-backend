@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
 import { AppModule } from './app.module'
+import { ValidationPipe } from '@nestjs/common'
 
 async function bootstrap() {
   try {
@@ -20,6 +21,7 @@ async function bootstrap() {
       origin: process.env.CLIENT_URL,
     })
     app.use(cookieParser())
+    app.useGlobalPipes(new ValidationPipe())
 
     await app.listen(PORT, () => console.log(`>> Server started on ${PORT} port`))
   } catch (e) {
