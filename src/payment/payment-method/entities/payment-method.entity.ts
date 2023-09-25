@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { PaymentLinkEntity } from 'src/payment/payment-link/entities/payment-link.entity'
 import { PointEntity } from 'src/point/entities/point.entity'
+import { Base } from 'src/utils/base'
 import { Column, Entity, OneToMany } from 'typeorm'
 
 @Entity('payment_method', { schema: 'public' })
-export class PaymentMethodEntity {
+export class PaymentMethodEntity extends Base {
   @ApiProperty({ description: 'Payment method name' })
   @Column({})
   name: string
