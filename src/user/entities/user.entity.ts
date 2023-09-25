@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { RoleEntity } from 'src/roles/entities/role.entity'
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
 import { Base } from '../../utils/base'
 import { TenantEntity } from 'src/tenant/entities/tenant.entity'
 import { ESubjects } from 'src/casl/e-subjects.enum'
@@ -34,7 +34,7 @@ export class UserEntity extends Base {
 
   @ApiProperty({ description: 'User tenant' })
   @ManyToOne(() => TenantEntity)
-  @JoinTable()
+  @JoinColumn()
   tenant: TenantEntity
 
   toResponse() {

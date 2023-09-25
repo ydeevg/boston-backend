@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinTable, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { ProductUnits } from '../product-unit.enum'
 import { PointEntity } from 'src/point/entities/point.entity'
 import { ConsumptionComponentEntity } from 'src/component/entities/consumption-component.entity'
 import { Base } from 'src/utils/base'
+import { ProductCategoryEntity } from '../category/entities/product-category.entity'
 
 @Entity('product', { schema: 'public' })
 export class ProductEntity extends Base {
@@ -29,15 +30,20 @@ export class ProductEntity extends Base {
 
   @ApiProperty({ description: 'Product consumption components' })
   @OneToMany(() => ConsumptionComponentEntity, (entity) => entity.forProduct)
-  @JoinTable({ name: 'consumption_components' })
+  @JoinColumn({ name: 'consumption_components' })
   consumptionComponents: ConsumptionComponentEntity[]
 
   @ApiProperty({ description: 'Is archive product?' })
-  @Column({ default: false, name: 'is_archive' })
-  isArchive: boolean
+  @Column({ default: false })
+  archived: boolean
 
   @ApiProperty({ description: 'Product restaurant' })
   @ManyToOne(() => PointEntity)
-  @JoinTable()
+  @JoinColumn()
   point: PointEntity
+
+  @ApiProperty({ description: 'Product categories' })
+  @ManyToMany(() => ProductCategoryEntity)
+  @JoinTable()
+  categories: ProductCategoryEntity[]
 }

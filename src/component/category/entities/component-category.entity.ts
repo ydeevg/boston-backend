@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm'
 import { Base } from 'src/utils/base'
 import { ApiProperty } from '@nestjs/swagger'
 import { PointEntity } from 'src/point/entities/point.entity'
@@ -12,7 +12,7 @@ export class ComponentCategoryEntity extends Base {
 
   @ApiProperty({ description: '' })
   @ManyToOne(() => PointEntity)
-  @JoinTable()
+  @JoinColumn()
   point: PointEntity
 
   @ApiProperty({ description: 'components' })

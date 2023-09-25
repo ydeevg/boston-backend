@@ -13,6 +13,12 @@ import { UserModule } from './user/user.module'
 import { PointModule } from './point/point.module'
 import { ProductModule } from './product/product.module'
 import { ComponentModule } from './component/component.module'
+import { ClientModule } from './client/client.module'
+import { OrderModule } from './order/order.module'
+import { SalePointModule } from './sale-point/sale-point.module'
+import { BillModule } from './bill/bill.module'
+import { PaymentModule } from './payment/payment.module'
+import { BankAccountModule } from './bank-account/bank-account.module';
 
 @Module({
   imports: [
@@ -28,6 +34,12 @@ import { ComponentModule } from './component/component.module'
     PointModule,
     ProductModule,
     ComponentModule,
+    ClientModule,
+    OrderModule,
+    SalePointModule,
+    BillModule,
+    PaymentModule,
+    BankAccountModule,
   ],
   controllers: [],
   providers: [],

@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger'
 import { PointEntity } from 'src/point/entities/point.entity'
 import { ProductUnits } from 'src/product/product-unit.enum'
 import { Base } from 'src/utils/base'
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
-import { ComponentCategoryEntity } from '../category/entities/category.entity'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
+import { ComponentCategoryEntity } from '../category/entities/component-category.entity'
 
 @Entity('component', { schema: 'public' })
 export class ComponentEntity extends Base {
@@ -27,16 +27,17 @@ export class ComponentEntity extends Base {
   @Column({ default: 0 })
   balance: number
 
-  @ApiProperty({ description: 'Is archive component?' })
-  @Column({ default: false, name: 'is_archive' })
-  isArchive: boolean
+  @ApiProperty({ description: 'Is archived component?' })
+  @Column({ default: false })
+  archived: boolean
 
   @ApiProperty({ description: 'Component restaurant' })
   @ManyToOne(() => PointEntity)
-  @JoinTable()
+  @JoinColumn()
   point: PointEntity
 
   @ApiProperty({ description: 'Component categories' })
   @ManyToMany(() => ComponentCategoryEntity)
+  @JoinTable()
   categories: ComponentCategoryEntity[]
 }
