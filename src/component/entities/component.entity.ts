@@ -2,9 +2,10 @@ import { ApiProperty } from '@nestjs/swagger'
 import { PointEntity } from 'src/point/entities/point.entity'
 import { ProductUnits } from 'src/product/product-unit.enum'
 import { Base } from 'src/utils/base'
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { ComponentCategoryEntity } from '../category/entities/component-category.entity'
 import { ConsumptionComponentEntity } from './consumption-component.entity'
+import { ComponentTransactionEntity } from './component-transaction.entity'
 
 @Entity('component', { schema: 'public' })
 export class ComponentEntity extends Base {
@@ -46,4 +47,8 @@ export class ComponentEntity extends Base {
   @ManyToMany(() => ConsumptionComponentEntity)
   @JoinTable()
   consumptionComponents: ConsumptionComponentEntity[]
+
+  @ApiProperty()
+  @OneToMany(() => ComponentTransactionEntity, (transaction) => transaction.component)
+  componentTransactions: ComponentTransactionEntity[]
 }

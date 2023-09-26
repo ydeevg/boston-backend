@@ -18,7 +18,7 @@ export class OrderTypeEntity extends Base {
 
   @ApiProperty()
   @OneToMany(() => OrderStatusLinkEntity, (link) => link.orderType)
-  statusSequence: OrderStatusLinkEntity[]
+  statusLinks: OrderStatusLinkEntity[]
 
   @ApiProperty()
   @ManyToMany(() => SalePointEntity)

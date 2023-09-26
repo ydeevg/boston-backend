@@ -21,7 +21,10 @@ export class TypeService {
   }
 
   async findById(id: typeof OrderTypeEntity.prototype.id) {
-    const orderType = await this.orderTypeRepository.findOne({ where: { id }, relations: ['point'] })
+    const orderType = await this.orderTypeRepository.findOne({
+      where: { id },
+      relations: ['point', 'statusLinks', 'statusLinks.status'],
+    })
     if (!orderType) throw new NotFoundException()
 
     return orderType

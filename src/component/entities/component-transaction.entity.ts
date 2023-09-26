@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Column, Entity, JoinColumn, JoinTable, ManyToOne } from 'typeorm'
 import { Base } from 'src/utils/base'
-import { ConsumptionComponentEntity } from './consumption-component.entity'
 import { ProductTransactionEntity } from 'src/product/entities/product-transaction.entity'
+import { ComponentEntity } from './component.entity'
 
 @Entity('component_transaction', { schema: 'public' })
 export class ComponentTransactionEntity extends Base {
   @ApiProperty()
-  @ManyToOne(() => ConsumptionComponentEntity)
+  @ManyToOne(() => ComponentEntity)
   @JoinTable()
-  consumptionComponent: ConsumptionComponentEntity
+  component: ComponentEntity
 
   @ApiProperty()
   @Column()

@@ -16,7 +16,7 @@ export class ProductEntity extends Base {
   @Column({ default: '' })
   description: string
 
-  @ApiProperty({ description: 'Product price for sales unit' })
+  @ApiProperty({ description: 'Product price of sales unit' })
   @Column({ default: 1 })
   price: number
 
@@ -46,4 +46,8 @@ export class ProductEntity extends Base {
   @ManyToMany(() => ProductCategoryEntity)
   @JoinTable()
   categories: ProductCategoryEntity[]
+
+  @ApiProperty({ description: 'Product is stop listed' })
+  @Column({ name: 'is_stop_listed', default: false })
+  isStopListed: boolean
 }

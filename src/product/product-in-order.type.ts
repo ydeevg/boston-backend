@@ -6,8 +6,6 @@ export class ExtraInOrderForDto {
   isExclusion?: boolean
 }
 
-export class ProductInOrderForDto {
-  product: typeof ProductEntity.prototype.id
-  amount: number
-  extras: ExtraInOrderForDto[]
+export class ProductInOrderForDto extends ExtraInOrderForDto {
+  extras?: ExtraInOrderForDto[]
 }

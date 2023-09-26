@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
-import { CreateComponentDto } from './dto/create-component.dto';
-import { UpdateComponentDto } from './dto/update-component.dto';
+import { Injectable } from '@nestjs/common'
+import { CreateComponentDto } from './dto/create-component.dto'
+import { UpdateComponentDto } from './dto/update-component.dto'
+import { ProductEntity } from 'src/product/entities/product.entity'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { ComponentEntity } from './entities/component.entity'
+import { ComponentTransactionEntity } from './entities/component-transaction.entity'
+import { ConsumptionComponentEntity } from './entities/consumption-component.entity'
+import { map } from 'lodash'
 
 @Injectable()
 export class ComponentService {
-  create(createComponentDto: CreateComponentDto) {
-    return 'This action adds a new component';
+  constructor(
+    @InjectRepository(ComponentEntity)
+    private componentRepository: Repository<ComponentEntity>,
+    @InjectRepository(ComponentTransactionEntity)
+    private componentTransactionRepository: Repository<ComponentTransactionEntity>,
+    @InjectRepository(ConsumptionComponentEntity)
+    private consumptionComponentRepository: Repository<ConsumptionComponentEntity>
+  ) {}
+
+  async findById(id: typeof ComponentEntity.prototype.id) {
+    const component = await this.componentRepository.findOne({ where: { id } })
+    return component
   }
 
-  findAll() {
-    return `This action returns all component`;
+  async discard(componentId: typeof ComponentEntity.prototype.id, amount: number) {
+    const component = await this.findById(componentId)
+    component.balance = component.balance - amount
+    await this.componentRepository.save(component)
+
+    return component
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} component`;
-  }
+  async discardByProduct(product: ProductEntity, amount: number): Promise<ComponentTransactionEntity[]> {
+    const consumptionComponents = product.consumptionComponents
+    const transactions = await Promise.all(
+      map(consumptionComponents, async (consumptionComponent) => {
+        const componentId = consumptionComponent.component.id
+        const totalAmount = consumptionComponent.amount * amount
+        const component = await this.discard(componentId, totalAmount)
 
-  update(id: number, updateComponentDto: UpdateComponentDto) {
-    return `This action updates a #${id} component`;
-  }
+        return await this.componentTransactionRepository.save({ component, amount: totalAmount })
+      })
+    )
 
-  remove(id: number) {
-    return `This action removes a #${id} component`;
+    return transactions
   }
 }

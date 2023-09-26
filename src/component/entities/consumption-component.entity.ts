@@ -3,7 +3,6 @@ import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'ty
 import { ComponentEntity } from './component.entity'
 import { ProductEntity } from 'src/product/entities/product.entity'
 import { Base } from 'src/utils/base'
-import { ComponentTransactionEntity } from './component-tranasction.entity'
 
 @Entity('consumption_component', { schema: 'public' })
 export class ConsumptionComponentEntity extends Base {
@@ -20,7 +19,4 @@ export class ConsumptionComponentEntity extends Base {
   @ApiProperty({ description: 'Amount consumption' })
   @Column({ default: 1 })
   amount: number
-
-  @OneToMany(() => ComponentTransactionEntity, (transaction) => transaction.consumptionComponent)
-  componentTransactions: ComponentTransactionEntity[]
 }

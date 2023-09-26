@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'type
 import { Base } from 'src/utils/base'
 import { ProductInOrderEntity } from './product-in-order.entity'
 import { ProductTransactionStatus } from '../product-transaction-status.enum'
-import { ComponentTransactionEntity } from 'src/component/entities/component-tranasction.entity'
+import { ComponentTransactionEntity } from 'src/component/entities/component-transaction.entity'
 
 @Entity('product_transaction', { schema: 'public' })
 export class ProductTransactionEntity extends Base {
