@@ -14,8 +14,11 @@ export class CaslAbilityFactory {
         forEach(policyPermissions, (policyPermission) => {
           const subject = policyPermission.subject
           const conditionsList = policyPermission.conditions
+          const userAccessPointIds = user.points.map((point) => point.id)
+          const userAccessTenantId = user.tenant.id
 
-          // conditionsList.push({ userId: { $in: [user.id] } })
+          conditionsList.push({ pointId: { $in: userAccessPointIds } })
+          conditionsList.push({ tenantId: { $in: [userAccessTenantId] } })
 
           for (const conditions of conditionsList) {
             if (policyPermission.create) {
@@ -39,6 +42,7 @@ export class CaslAbilityFactory {
             }
           }
 
+          can(Action.Read, ESubjects.User, { userId: { $in: [user.id] } })
           can(Action.Read, ESubjects.PoliciesPermissionsForUser)
         })
       }

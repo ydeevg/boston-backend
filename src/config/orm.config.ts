@@ -14,8 +14,8 @@ const AppDataSource = {
   synchronize: false,
   migrationsRun: false,
   autoLoadEntities: false,
-  entities: [join(__dirname, '..', '..', 'dist', '**', 'entities', '*.entity.js')],
-  migrations: [join(__dirname, '..', '..', 'dist', 'migrations', '**', '*.js')],
+  entities: [join(__dirname, '..', '..', 'dist', '**', 'entities', '*.entity{.js,.ts}')],
+  migrations: [join(__dirname, '..', '..', 'dist', 'migrations', '**', '*{.js,.ts}')],
   logging: true,
 } as DataSourceOptions
 

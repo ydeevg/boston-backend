@@ -5,12 +5,16 @@ import { In, Repository } from 'typeorm'
 import { CreatePolicyPermissionDto } from './dto/create-policy-permission.dto'
 import { UpdatePolicyPermissionDto } from './dto/update-policy-permission.dto'
 import { PolicyPermissionEntity } from './entities/policy-permission.entity'
+import { SPolicyEntity } from './entities/sPolicy.entity'
+import { ESubjects } from 'src/casl/e-subjects.enum'
 
 @Injectable()
 export class PolicyPermissionService {
   constructor(
     @InjectRepository(PolicyPermissionEntity)
-    private policyPermissionRepository: Repository<PolicyPermissionEntity>
+    private policyPermissionRepository: Repository<PolicyPermissionEntity>,
+    @InjectRepository(SPolicyEntity)
+    private sPolicyRepository: Repository<SPolicyEntity>
   ) {}
 
   create(createPolicyPermissionDto: CreatePolicyPermissionDto) {
@@ -44,5 +48,21 @@ export class PolicyPermissionService {
     })
 
     return policyPermissions
+  }
+
+  private async createNeededSPolicies() {
+    const sPolicies = await this.sPolicyRepository.find()
+    const sPoliciesNames = sPolicies.map((sPolicy) => sPolicy.name)
+    const subjects = Object.values(ESubjects)
+
+    const deficientSPolicyNames = subjects.filter((subject) => !sPoliciesNames.includes(subject))
+
+    if (deficientSPolicyNames.length > 0) {
+      await this.sPolicyRepository.save(deficientSPolicyNames.map((sPolicyName) => ({ name: sPolicyName })))
+    }
+  }
+
+  async onApplicationBootstrap() {
+    await this.createNeededSPolicies()
   }
 }

@@ -23,7 +23,7 @@ export class UserService {
   }
 
   async findAll() {
-    const users = await this.userRepository.find({ relations: ['roles', 'tenant'] })
+    const users = await this.userRepository.find({ relations: ['roles', 'tenant', 'points'] })
 
     return users.map((user) => user.toResponse())
   }
@@ -37,13 +37,13 @@ export class UserService {
   }
 
   async findById(id: typeof UserEntity.prototype.id) {
-    const user = this.userRepository.findOne({ where: { id }, relations: ['roles', 'tenant'] })
+    const user = this.userRepository.findOne({ where: { id }, relations: ['roles', 'tenant', 'points'] })
 
     return user
   }
 
   async findByPhone(phone: typeof UserEntity.prototype.phone) {
-    const user = await this.userRepository.findOne({ where: { phone }, relations: ['roles', 'tenant'] })
+    const user = await this.userRepository.findOne({ where: { phone }, relations: ['roles', 'tenant', 'points'] })
 
     return user
   }

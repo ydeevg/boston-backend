@@ -4,6 +4,7 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'ty
 import { Base } from '../../utils/base'
 import { TenantEntity } from 'src/tenant/entities/tenant.entity'
 import { ESubjects } from 'src/casl/e-subjects.enum'
+import { PointEntity } from 'src/point/entities/point.entity'
 
 @Entity('user', { schema: 'public' })
 export class UserEntity extends Base {
@@ -32,14 +33,19 @@ export class UserEntity extends Base {
   @JoinTable()
   roles: RoleEntity[]
 
+  @ApiProperty({ description: 'Access points for user' })
+  @ManyToMany(() => PointEntity)
+  @JoinTable({ name: 'access_points' })
+  points: PointEntity[]
+
   @ApiProperty({ description: 'User tenant' })
   @ManyToOne(() => TenantEntity)
   @JoinColumn()
   tenant: TenantEntity
 
   toResponse() {
-    const { id, email, name, cashiersName, createdAt, roles, updatedAt, tenant } = this
-    return { id, email, name, cashiersName, createdAt, roles, updatedAt, tenant }
+    const { id, email, name, cashiersName, createdAt, roles, updatedAt, tenant, points } = this
+    return { id, email, name, cashiersName, createdAt, roles, updatedAt, tenant, points }
   }
 
   toCaslConditionsFields() {

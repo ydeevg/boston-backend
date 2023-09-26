@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { ComponentCategoryEntity } from 'src/component/category/entities/component-category.entity'
 import { ComponentEntity } from 'src/component/entities/component.entity'
 import { ProductCategoryEntity } from 'src/product/category/entities/product-category.entity'
@@ -10,6 +10,8 @@ import { Base } from 'src/utils/base'
 import { PaymentMethodEntity } from 'src/payment/payment-method/entities/payment-method.entity'
 import { OrderEntity } from 'src/order/entities/order.entity'
 import { BankAccountEntity } from 'src/bank-account/entities/bank-account.entity'
+import { ESubjects } from 'src/casl/e-subjects.enum'
+import { UserEntity } from 'src/user/entities/user.entity'
 
 @Entity('point', { schema: 'public' })
 export class PointEntity extends Base {
@@ -58,9 +60,24 @@ export class PointEntity extends Base {
   @OneToMany(() => BankAccountEntity, (bankAccount) => bankAccount.point)
   bankAccounts: BankAccountEntity[]
 
-  //working hours
+  @ApiProperty({ description: 'Access users' })
+  @ManyToMany(() => UserEntity)
+  users: UserEntity[]
 
-  //bank
+  toCaslConditionsFields() {
+    const { id } = this
+    return new ConditionFields(id)
+  }
+}
 
-  //orders
+class ConditionFields {
+  constructor(id: typeof Base.prototype.id) {
+    this.pointId = id
+  }
+
+  pointId: typeof Base.prototype.id
+
+  static get modelName() {
+    return ESubjects.Order
+  }
 }
