@@ -58,7 +58,9 @@ export class PolicyPermissionService {
     const deficientSPolicyNames = subjects.filter((subject) => !sPoliciesNames.includes(subject))
 
     if (deficientSPolicyNames.length > 0) {
-      await this.sPolicyRepository.save(deficientSPolicyNames.map((sPolicyName) => ({ name: sPolicyName })))
+      await this.sPolicyRepository.save(
+        deficientSPolicyNames.map((sPolicyName) => ({ name: sPolicyName, description: '' }))
+      )
     }
   }
 
