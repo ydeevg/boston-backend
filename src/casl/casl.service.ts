@@ -19,32 +19,58 @@ export class CaslService {
   ) {}
 
   async getAbility(req: RequestType) {
+
+    const { user, rolesIds: userRolesIds } = await this.getUserAndRolesByRequest(req)
+    const result = await this.policyPermissionService.policyPermissionPartialListForUserRoles(userRolesIds)
+    const policyPermissions = this.getPreparedPolicyPermissions(result)
+    const ability = this.caslAbilityFactory.createForUser(user, policyPermissions)
+
+    return { ability, user }
+  }
+
+  async getUserAndRolesByRequest(req: RequestType) {
+    const accessToken = this.getAccessToken(req)
+    const payload = await this.getPayload(accessToken)
+
+    const { id: userId, rolesIds: userRolesIds } = payload
+
+    const user = await this.userService.findById(userId)
+    if (!user) throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
+
+    return { user, rolesIds: userRolesIds }
+  }
+
+  async getUserByRequest(req: RequestType) {
+    const accessToken = this.getAccessToken(req)
+    const payload = await this.getPayload(accessToken)
+
+    const { id: userId } = payload
+
+    const user = await this.userService.findById(userId)
+
+    if (!user) throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
+
+    return user
+  }
+
+  private getAccessToken(req: RequestType) {
     if (req?.headers?.authorization || req?.query?.accessToken) {
       const accessToken: string = req.query.accessToken || req.headers.authorization.split(' ')[1]
 
-      let payload: TDecodedToken | undefined
-      try {
-        payload = this.jwtService.verify(accessToken, { secret: process.env.PRIVATE_KEY_ACCESS_TOKEN })
-      } catch (error) {
-        throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
-      }
+      return accessToken
+    }
+    throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
+  }
 
-      const { id: userId, rolesIds: userRolesIds } = payload
-
-      const user = await this.userService.findById(userId)
-
-      if (!user) throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
-
-      const result = await this.policyPermissionService.policyPermissionPartialListForUserRoles(userRolesIds)
-
-      const policyPermissions = this.getPreparedPolicyPermissions(result)
-
-      const ability = this.caslAbilityFactory.createForUser(user, policyPermissions)
-
-      return { ability, user }
+  private async getPayload(accessToken: string) {
+    let payload: TDecodedToken | undefined
+    try {
+      payload = this.jwtService.verify(accessToken, { secret: process.env.PRIVATE_KEY_ACCESS_TOKEN })
+    } catch (error) {
+      throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
     }
 
-    throw new UnauthorizedException({ message: 'Неавторизованный запрос' })
+    return payload
   }
 
   private getPreparedPolicyPermissions(rawData: PolicyPermissionEntity[]) {
