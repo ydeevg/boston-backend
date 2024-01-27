@@ -2,7 +2,8 @@ import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common'
 import { ApiOperation, ApiResponse } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
 import { AuthUserDto } from './dto/auth-user.dto'
-import { Request, Response } from 'express'
+import { Response } from 'express'
+import RequestType from 'src/types/request.type'
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +25,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Logout' })
   @ApiResponse({ status: 200 })
   @Post('/logout')
-  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: RequestType, @Res({ passthrough: true }) res: Response) {
     const { refreshToken } = req.cookies
 
     const token = await this.authService.logout(refreshToken)
@@ -35,7 +36,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh access token' })
   @ApiResponse({ status: 200 })
   @Get('/refresh')
-  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async refresh(@Req() req: RequestType, @Res({ passthrough: true }) res: Response) {
     const { refreshToken } = req.cookies
 
     const { user, accessToken, refreshToken: updatedRefreshToken } = await this.authService.refresh(refreshToken)

@@ -5,6 +5,7 @@ import { UpdateOrderDto } from './dto/update-order.dto'
 import { CaslService } from 'src/casl/casl.service'
 import { PointService } from 'src/point/point.service'
 import { Action } from 'src/casl/casl-actions.enum'
+import RequestType from 'src/types/request.type'
 
 @Controller('order')
 export class OrderController {
@@ -15,7 +16,7 @@ export class OrderController {
   ) {}
 
   @Post()
-  async create(@Body() createOrderDto: CreateOrderDto, @Req() req) {
+  async create(@Body() createOrderDto: CreateOrderDto, @Req() req: RequestType) {
     const point = await this.pointService.findById(createOrderDto.point)
     const { ability } = await this.caslService.getAbility(req)
     const isAccess = ability.can(Action.Create, point.toCaslConditionsFields())

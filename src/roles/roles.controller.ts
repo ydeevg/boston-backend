@@ -1,7 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { RolesService } from './roles.service'
+import { PoliciesGuard } from 'src/guards/policies.guard'
+import { CheckPolicies } from 'src/decorators/check-policies.decorator'
+import { AppAbility } from 'src/casl/casl.types'
+import { Action } from 'src/casl/casl-actions.enum'
+import { ESubjects } from 'src/casl/e-subjects.enum'
+import RequestType from 'src/types/request.type'
 
 @Controller('role')
 export class RolesController {
@@ -13,7 +19,10 @@ export class RolesController {
   }
 
   @Get()
-  findAll() {
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, ESubjects.Role))
+  findAll(@Req() req: RequestType) {
+
     return this.rolesService.findAll()
   }
 

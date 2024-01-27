@@ -7,6 +7,7 @@ import { PolicyPermissionService } from 'src/policy-permission/policy-permission
 import { PolicyPermissionEntity } from 'src/policy-permission/entities/policy-permission.entity'
 import { ESubjects } from './e-subjects.enum'
 import { map } from 'lodash'
+import RequestType from 'src/types/request.type'
 
 @Injectable()
 export class CaslService {
@@ -17,7 +18,7 @@ export class CaslService {
     private caslAbilityFactory: CaslAbilityFactory
   ) {}
 
-  async getAbility(req: any) {
+  async getAbility(req: RequestType) {
     if (req?.headers?.authorization || req?.query?.accessToken) {
       const accessToken: string = req.query.accessToken || req.headers.authorization.split(' ')[1]
 

@@ -4,6 +4,7 @@ import { In, Repository } from 'typeorm'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
 import { RoleEntity } from './entities/role.entity'
+import { TenantEntity } from 'src/tenant/entities/tenant.entity'
 
 @Injectable()
 export class RolesService {
@@ -23,6 +24,14 @@ export class RolesService {
   async findManyByIds(roleIds: (typeof RoleEntity.prototype.id)[]): Promise<RoleEntity[]> {
     const roles = await this.roleRepository.findBy({
       id: In(roleIds),
+    })
+
+    return roles
+  }
+
+  async findManyByTenantId(tenantId: typeof TenantEntity.prototype.id): Promise<RoleEntity[]> {
+    const roles = await this.roleRepository.findBy({
+      tenant: { id: tenantId },
     })
 
     return roles

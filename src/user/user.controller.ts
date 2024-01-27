@@ -7,6 +7,7 @@ import { Action } from 'src/casl/casl-actions.enum'
 import { ESubjects } from 'src/casl/e-subjects.enum'
 import { PoliciesGuard } from 'src/guards/policies.guard'
 import { CaslService } from 'src/casl/casl.service'
+import RequestType from 'src/types/request.type'
 
 @Controller('user')
 export class UserController {
@@ -20,7 +21,7 @@ export class UserController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string, @Req() req) {
+  async findById(@Param('id') id: string, @Req() req: RequestType) {
     const user = await this.userService.findById(id)
     const { ability } = await this.caslService.getAbility(req)
     const isAccess = ability.can(Action.Update, user.toCaslConditionsFields())
