@@ -29,6 +29,14 @@ export class PolicyPermissionService {
     return `This action returns a #${id} policyPermission`
   }
 
+  async findMany(policyIds: (typeof PolicyPermissionEntity.prototype.id)[]) {
+    return await this.policyPermissionRepository.find({
+      where: {
+        policy: In(policyIds),
+      },
+    })
+  }
+
   update(id: number, updatePolicyPermissionDto: UpdatePolicyPermissionDto) {
     return `This action updates a #${id} policyPermission`
   }
