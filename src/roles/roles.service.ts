@@ -38,16 +38,16 @@ export class RolesService {
     return roles
   }
 
-  async findAllByTenantId(tenantId: typeof TenantEntity.prototype.id): Promise<RoleEntity[]> {
+  async findAllByTenantId(tenantId: typeof TenantEntity.prototype.id) {
     const roles = await this.roleRepository.findBy({
       tenant: { id: tenantId },
     })
 
-    return roles
+    return { roles }
   }
 
   findOne(id: typeof RoleEntity.prototype.id) {
-    const role = this.roleRepository.findOne({ where: { id } })
+    const role = this.roleRepository.findOne({ where: { id }, relations: ['policyPermissions', 'tenant', 'users'] })
 
     return role
   }

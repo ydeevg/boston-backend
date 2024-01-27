@@ -29,7 +29,7 @@ export class UserEntity extends Base {
   cashiersName: string
 
   @ApiProperty({ description: 'Роли пользователя' })
-  @ManyToMany(() => RoleEntity)
+  @ManyToMany(() => RoleEntity, (role) => role.users)
   @JoinTable()
   roles: RoleEntity[]
 

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import { TenantEntity } from 'src/tenant/entities/tenant.entity'
 import { PolicyPermissionEntity } from 'src/policy-permission/entities/policy-permission.entity'
 import { UserEntity } from 'src/user/entities/user.entity'
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { Base } from '../../utils/base'
 
 @Entity('role')
@@ -25,5 +25,5 @@ export class RoleEntity extends Base {
 
   @ApiProperty({ description: 'Пользователи' })
   @ManyToMany(() => UserEntity, (user) => user.roles)
-  users: UserEntity
+  users: UserEntity[]
 }
