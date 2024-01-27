@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import { CreateRoleDto } from './dto/create-role.dto'
@@ -46,8 +46,9 @@ export class RolesService {
     return { roles }
   }
 
-  findOne(id: typeof RoleEntity.prototype.id) {
-    const role = this.roleRepository.findOne({ where: { id }, relations: ['policyPermissions', 'tenant', 'users'] })
+  async findOne(id: typeof RoleEntity.prototype.id) {
+    const role = await this.roleRepository.findOne({ where: { id }, relations: ['policyPermissions', 'tenant', 'users'] })
+    if (!role) throw new NotFoundException()
 
     return role
   }
@@ -55,6 +56,7 @@ export class RolesService {
   async update(id: typeof RoleEntity.prototype.id, updateRoleDto: UpdateRoleDto) {
     const permissions = updateRoleDto.policyPermissions ? await this.policyPermissionService.findMany(updateRoleDto.policyPermissions) : []
     const role = await this.findOne(id)
+    if (!role) throw new NotFoundException()
 
     if (updateRoleDto.name) role.name = updateRoleDto.name
     if (updateRoleDto.description) role.description = updateRoleDto.description
@@ -65,6 +67,7 @@ export class RolesService {
 
   async remove(id: typeof RoleEntity.prototype.id) {
     const role = await this.findOne(id)
+    if (!role) throw new NotFoundException()
 
     return this.roleRepository.remove(role)
   }
